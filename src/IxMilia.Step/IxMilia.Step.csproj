@@ -5,7 +5,8 @@
     <Copyright>Copyright 2017</Copyright>
     <AssemblyTitle>IxMilia.Step</AssemblyTitle>
     <Authors>IxMilia</Authors>
-    <TargetFrameworks>netstandard1.0;netstandard1.3</TargetFrameworks>
+    <TargetFrameworks>net5.0;net47</TargetFrameworks>
+	  <!--netstandard1.0;netstandard1.3;-->
     <AssemblyName>IxMilia.Step</AssemblyName>
     <PackageId>IxMilia.Step</PackageId>
     <PackageTags>CAD;STEP;STP</PackageTags>
@@ -20,6 +21,10 @@
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
     <DefineConstants>$(DefineConstants);HAS_FILESYSTEM_ACCESS</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard1.0|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

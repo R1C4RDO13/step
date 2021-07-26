@@ -6,5 +6,18 @@ namespace IxMilia.Step.Items
             : base(name)
         {
         }
+
+    }
+
+    public class StepCurveComplex : StepCurve
+    {
+        public override StepItemType ItemType => ~StepItemType.ComplexItem;
+
+        private readonly StepComplexItem item;
+
+        public StepCurveComplex(StepComplexItem item) : base("Complex curve")
+        {
+            this.item = item;
+        }
     }
 }

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using IxMilia.Step.Syntax;
 
+[assembly: InternalsVisibleTo("StepInterpreter")]
 namespace IxMilia.Step.Items
 {
     public abstract partial class StepRepresentationItem

@@ -66,7 +66,10 @@ namespace IxMilia.Step.Items
             edgeCurve.Name = syntaxList.Values[0].GetStringValue();
             binder.BindValue(syntaxList.Values[1], v => edgeCurve.EdgeStart = v.AsType<StepVertex>());
             binder.BindValue(syntaxList.Values[2], v => edgeCurve.EdgeEnd = v.AsType<StepVertex>());
-            binder.BindValue(syntaxList.Values[3], v => edgeCurve.EdgeGeometry = v.AsType<StepCurve>());
+
+            binder.BindValue(syntaxList.Values[3], v => edgeCurve.EdgeGeometry = v.AsType<StepCurve>
+            (cplx => new StepCurveComplex(cplx)));
+
             edgeCurve.IsSameSense = syntaxList.Values[4].GetBooleanValue();
             return edgeCurve;
         }

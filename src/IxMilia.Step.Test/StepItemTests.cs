@@ -533,6 +533,7 @@ END-ISO-10303-21;
 ");
         }
 
+
         [Fact]
         public void ReadCylindricalSurfaceTest()
         {
@@ -585,5 +586,268 @@ END-ISO-10303-21;
 .UNSPECIFIED.);
 ");
         }
+
+
+
+        //R1C4RDO13
+        [Fact]
+
+
+        public void WriteToroidalSurfaceTest()
+        {
+            var surface = new StepToroidalSurface(
+                "",
+                new StepAxis2Placement3D(
+                    "",
+                    new StepCartesianPoint("", 1.0, 2.0, 3.0),
+                    new StepDirection("", 0.0, 0.0, 1.0),
+                    new StepDirection("", 1.0, 0.0, 0.0)),
+                12.0, 5.0);
+            AssertFileContains(surface, @"
+#1=CARTESIAN_POINT('',(1.0,2.0,3.0));
+#2=DIRECTION('',(0.0,0.0,1.0));
+#3=DIRECTION('',(1.0,0.0,0.0));
+#4=AXIS2_PLACEMENT_3D('',#1,#2,#3);
+#5=TOROIDAL_SURFACE('',#4,12.0,5.0);
+");
+        }
+
+
+        [Fact]
+        public void ReadToroidalSurfaceTest()
+        {
+            var surface = (StepToroidalSurface)ReadTopLevelItem(@"
+#1=CARTESIAN_POINT('',(1.0,2.0,3.0));
+#2=DIRECTION('',(0.0,0.0,1.0));
+#3=DIRECTION('',(1.0,0.0,0.0));
+#4=AXIS2_PLACEMENT_3D('',#1,#2,#3);
+#5=TOROIDAL_SURFACE('NONE',#4,25.0,5.0);
+");
+            Assert.Equal(25.0, surface.Major_radius);
+            Assert.Equal(5.0, surface.Minor_radius);
+        }
+
+        [Fact]
+        public void WriteAxisPlacement1()
+        {
+            var axis1Placement = new StepAxis1Placement("AXIS1",
+                new StepCartesianPoint("POINT1", 2.3, -56.4, 1.3),
+                new StepDirection("DIR1", 1.0, 0, 0));
+            AssertFileContains(axis1Placement, @"
+#1=CARTESIAN_POINT('POINT1',(2.3,-56.4,1.3));
+#2=DIRECTION('DIR1',(1.0,0.0,0.0));
+#3=AXIS1_PLACEMENT('AXIS1',#1,#2);
+");
+        }
+
+        [Fact]
+        public void WriteAxis2Placement3d()
+        {
+            var axis1Placement = new StepAxis2Placement3D("AXIS1",
+                new StepCartesianPoint("POINT1", 2.3, -56.4, 1.3),
+                new StepDirection("DIR1", 1.0, 0, 0), new StepDirection("DIR2" , 0 ,0 ,1)); 
+            AssertFileContains(axis1Placement, @"
+#1=CARTESIAN_POINT('POINT1',(2.3,-56.4,1.3));
+#2=DIRECTION('DIR1',(1.0,0.0,0.0));
+#3=DIRECTION('DIR2',(0.0,0.0,1.0));
+#4=AXIS2_PLACEMENT_3D('AXIS1',#1,#2,#3);
+");
+        }
+
+
+
+        [Fact]
+        public void ReadAxis1PlacementTest()
+        {
+            var AxisPlacement1 = (StepAxis1Placement)ReadTopLevelItem(@"
+#1=CARTESIAN_POINT('',(169.75,-26.98,62.49));
+#2=DIRECTION('',(0.15,0.98,0.00));
+#3=AXIS1_PLACEMENT('AXIS1',#1,#2);
+");
+
+            Assert.NotNull(AxisPlacement1);
+            Assert.Equal("AXIS1", AxisPlacement1.Name);
+            Assert.Equal(169.75, AxisPlacement1.Location.X);
+            Assert.Equal(-26.98, AxisPlacement1.Location.Y);
+            Assert.Equal(62.49, AxisPlacement1.Location.Z);
+            Assert.Equal(0.15, AxisPlacement1.Axis.X);
+            Assert.Equal(0.98, AxisPlacement1.Axis.Y);
+            Assert.Equal(0.0, AxisPlacement1.Axis.Z);
+        }
+
+
+
+        [Fact]
+        public void ReadAxis2Placement3DTest()
+        {
+
+            var AxisPlacement2 = (StepAxis2Placement3D)ReadTopLevelItem(@"
+#1=CARTESIAN_POINT('',(169.75,-26.98,62.49));
+#2=DIRECTION('',(0.15,0.98,0.00));
+#3=DIRECTION('',(-3.74,-1.,-6.12));
+#4=AXIS2_PLACEMENT_3D('AXIS2',#1,#2,#3);
+");
+
+            Assert.NotNull(AxisPlacement2);
+            Assert.Equal("AXIS2", AxisPlacement2.Name);
+            Assert.Equal(169.75, AxisPlacement2.Location.X);
+            Assert.Equal(-26.98, AxisPlacement2.Location.Y);
+            Assert.Equal(62.49, AxisPlacement2.Location.Z);
+            Assert.Equal(0.15, AxisPlacement2.Axis.X);
+            Assert.Equal(0.98, AxisPlacement2.Axis.Y);
+            Assert.Equal(0.0, AxisPlacement2.Axis.Z);
+            Assert.Equal(-3.74, AxisPlacement2.RefDirection.X);
+            Assert.Equal(-1, AxisPlacement2.RefDirection.Y);
+            Assert.Equal(-6.12, AxisPlacement2.RefDirection.Z);
+
+        }
+
+        //TODO:: continue development of this test 
+        [Fact]
+        public void WriteClosedShellTest()
+        {
+            var closedShell = new StepClosedShell("CLOSEDSHELL", new[]{
+                new StepAdvancedFace("FACE1", new []{ new StepFaceBound(
+                "",
+                new StepEdgeLoop(
+                    "",
+                    new StepOrientedEdge(
+                        "",
+                        null,
+                        null,
+                        new StepEdgeCurve(
+                            "",
+                            null,
+                            null,
+                            StepLine.FromPoints(0.0, 0.0, 0.0, 1.0, 0.0, 0.0),
+                            true),
+                        true)),
+                true) ,
+                new StepFaceBound(
+                "",
+                new StepEdgeLoop(
+                    "",
+                    new StepOrientedEdge(
+                        "",
+                        null,
+                        null,
+                        new StepEdgeCurve(
+                            "",
+                            null,
+                            null,
+                            StepLine.FromPoints(0.0, 2.0, 0.0, 1.0, 0.0,3.0),
+                            true),
+                        true)),
+                true) })
+                {
+                FaceGeometry =  new StepToroidalSurface("TOROIDAL" ,
+                new StepAxis2Placement3D( "AXIS3D" ,
+                new StepCartesianPoint("POINT" , 3.2,5.4,-9.6) ,
+                new StepDirection("DIR1" , 1,0,0) ,
+                new StepDirection("DIR2" , 0,1,0)) , 12.0, 4.0) },
+                new StepAdvancedFace("FACE2", new []{ new StepFaceBound(
+                "",
+                new StepEdgeLoop(
+                    "",
+                    new StepOrientedEdge(
+                        "",
+                        null,
+                        null,
+                        new StepEdgeCurve(
+                            "",
+                            null,
+                            null,
+                            StepLine.FromPoints(0.0, 0.0, 0.0, 1.0, 0.0, 0.0),
+                            true),
+                        true)),
+                true) ,
+                new StepFaceBound(
+                "",
+                new StepEdgeLoop(
+                    "",
+                    new StepOrientedEdge(
+                        "",
+                        null,
+                        null,
+                        new StepEdgeCurve(
+                            "",
+                            null,
+                            null,
+                            StepLine.FromPoints(0.0, 2.0, 0.0, 1.0, 0.0,3.0),
+                            true),
+                        true)),
+                true) })
+            {
+                FaceGeometry =  new StepToroidalSurface("TOROIDAL2" ,
+                new StepAxis2Placement3D( "AXIS3D" ,
+                new StepCartesianPoint("POINT" , 6.2,5.4,-26.6) ,
+                new StepDirection("DIR1" , 0,1,0) ,
+                new StepDirection("DIR2" , 1,0,0)) , 12.0, 4.0)
+
+                }});
+
+
+            AssertFileContains(closedShell, @"EERORR");
+        }
+
+        [Fact]
+        public void ReadClosedShellTest()
+        {
+            var file = ReadFile(@"
+#1=FACE_OUTER_BOUND('',#2,.T.);
+#2=EDGE_LOOP('',(#12,#13,#14,#15));
+#3=LINE('',#31,#4);
+#4=VECTOR('',#24,2.5);
+#5=CIRCLE('',#18,2.5);
+#6=CIRCLE('',#19,2.5);
+#7=VERTEX_POINT('',#28);
+#8=VERTEX_POINT('',#30);
+#9=EDGE_CURVE('',#7,#7,#5,.T.);
+#10=EDGE_CURVE('',#7,#8,#3,.T.);
+#11=EDGE_CURVE('',#8,#8,#6,.T.);
+#12=ORIENTED_EDGE('',*,*,#9,.F.);
+#13=ORIENTED_EDGE('',*,*,#10,.T.);
+#14=ORIENTED_EDGE('',*,*,#11,.F.);
+#15=ORIENTED_EDGE('',*,*,#10,.F.);
+#16=CYLINDRICAL_SURFACE('',#17,2.5);
+#17=AXIS2_PLACEMENT_3D('',#27,#20,#21);
+#18=AXIS2_PLACEMENT_3D('',#29,#22,#23);
+#19=AXIS2_PLACEMENT_3D('',#32,#25,#26);
+#20=DIRECTION('center_axis',(0.,0.,-1.));
+#21=DIRECTION('ref_axis',(-1.,0.,0.));
+#22=DIRECTION('center_axis',(0.,0.,-1.));
+#23=DIRECTION('ref_axis',(-1.,0.,0.));
+#24=DIRECTION('',(0.,0.,-1.));
+#25=DIRECTION('center_axis',(0.,0.,1.));
+#26=DIRECTION('ref_axis',(-1.,0.,0.));
+#27=CARTESIAN_POINT('Origin',(0.,0.,5.));
+#28=CARTESIAN_POINT('',(2.5,3.06161699786838E-16,5.));
+#29=CARTESIAN_POINT('Origin',(0.,0.,5.));
+#30=CARTESIAN_POINT('',(2.5,3.06161699786838E-16,0.));
+#31=CARTESIAN_POINT('',(2.5,-3.06161699786838E-16,5.));
+#32=CARTESIAN_POINT('Origin',(0.,0.,0.));
+#33=ADVANCED_FACE('',(#1),#16,.F.);
+#34 = ADVANCED_FACE ( 'NONE', ( #35 ), #16, .F. ) ;
+#35 = FACE_OUTER_BOUND ( 'NONE', #36, .T. ) ;
+#36 = EDGE_LOOP ( 'NONE', ( #37, #12, #13, #14 ) ) ;
+#37 = ORIENTED_EDGE ( 'NONE', *, *, #38, .T. ) ;
+#38 = EDGE_CURVE ( 'NONE', #39, #41, #43, .T. ) ;
+#39 = VERTEX_POINT ( 'NONE', #40 ) ;
+#40 = CARTESIAN_POINT ( 'NONE',  ( 0.0000000000000000000, -180.0000000000000000, -70.54999999999999700 ) ) ;
+#41 = VERTEX_POINT ( 'NONE', #42 ) ;
+#42 = CARTESIAN_POINT ( 'NONE',  ( 6.796789735267809800E-016, -180.0000000000000000, -59.45000000000000300 ) ) ;
+#43 = CIRCLE ( 'NONE', #44, 5.549999999999998900 ) ;
+#44 = AXIS2_PLACEMENT_3D ( 'NONE', #45, #20, #21 ) ;
+#45 = CARTESIAN_POINT ( 'NONE',  ( 0.0000000000000000000, -180.0000000000000000, -65.00000000000000000 ) ) ;
+#46 = CLOSED_SHELL('' , (#33 , #34));
+");
+            var face = file.GetTopLevelItems().OfType<StepClosedShell>().FirstOrDefault();
+            Assert.NotNull(face);
+            Assert.NotNull(face.Faces);
+            Assert.Equal(2, face.Faces.Count);
+
+        }
+
+
     }
 }

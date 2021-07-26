@@ -1,16 +1,17 @@
+﻿using IxMilia.Step.Syntax;
 using System.Collections.Generic;
 using System.Linq;
-using IxMilia.Step.Syntax;
 
 namespace IxMilia.Step.Items
 {
-    public abstract class StepFace : StepTopologicalRepresentationItem
+    public abstract class StepConnectedFaceSet : StepTopologicalRepresentationItem
     {
-        public List<StepFaceBound> Bounds { get;  } = new List<StepFaceBound>();
+        public List<StepFace> Faces { get;  } = new List<StepFace>();
 
-        public StepFace(string name)
-            : base(name)
+        public StepConnectedFaceSet(string name) 
+            : base (name)
         {
+
         }
 
         internal override IEnumerable<StepSyntax> GetParameters(StepWriter writer)
@@ -20,7 +21,8 @@ namespace IxMilia.Step.Items
                 yield return parameter;
             }
 
-            yield return new StepSyntaxList(Bounds.Select(b => writer.GetItemSyntax(b)));
+            yield return new StepSyntaxList(Faces.Select(b => writer.GetItemSyntax(b)));
         }
+
     }
 }

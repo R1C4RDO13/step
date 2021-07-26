@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using IxMilia.Step.Syntax;
 
 namespace IxMilia.Step.Items
@@ -9,6 +10,17 @@ namespace IxMilia.Step.Items
             : base(name)
         {
         }
+
+        public StepAdvancedFace(string name , IEnumerable<StepFaceBound> stepFaceBounds)
+       : base(name)
+        {
+            Bounds.Clear();
+            for (int i = 0; i < stepFaceBounds.Count(); i++)
+            {
+                Bounds.Add(stepFaceBounds.ElementAt(i));
+            }
+        }
+
 
         private StepAdvancedFace()
             : base(string.Empty)
@@ -31,7 +43,10 @@ namespace IxMilia.Step.Items
                 var j = i; // capture to avoid rebinding
                 binder.BindValue(boundsList.Values[j], v => face.Bounds[j] = v.AsType<StepFaceBound>());
             }
-            binder.BindValue(syntaxList.Values[2], v => face.FaceGeometry = v.AsType<StepSurface>());
+
+            binder.BindValue(syntaxList.Values[2], v => face.FaceGeometry = v.AsType<StepSurface>
+            (surfc => new StepSurfaceComplex(surfc)));
+
             face.SameSense = syntaxList.Values[3].GetBooleanValue();
 
             return face;

@@ -1,15 +1,15 @@
+﻿using IxMilia.Step.Syntax;
 using System;
 using System.Collections.Generic;
-using IxMilia.Step.Syntax;
 
 namespace IxMilia.Step.Items
 {
-    public class StepAxis2Placement3D : StepAxis2Placement
+    public class StepAxis1Placement : StepPlacement
     {
-        public override StepItemType ItemType => StepItemType.AxisPlacement3D;
+        public override StepItemType ItemType => StepItemType.Axis1Placement;
 
         private StepDirection _axis;
-
+            
         public StepDirection Axis
         {
             get { return _axis; }
@@ -24,22 +24,20 @@ namespace IxMilia.Step.Items
             }
         }
 
-        private StepAxis2Placement3D()
-            : base(string.Empty)
+
+        public StepAxis1Placement() : base(string.Empty)
         {
         }
 
-        public StepAxis2Placement3D(string name, StepCartesianPoint location, StepDirection axis, StepDirection refDirection)
-            : base(name , location , refDirection)
+        public StepAxis1Placement(string name , StepCartesianPoint location , StepDirection axis): base(name , location)
         {
-            Axis = axis;
+            this.Axis = axis;
         }
 
         internal override IEnumerable<StepRepresentationItem> GetReferencedItems()
         {
             yield return Location;
             yield return Axis;
-            yield return RefDirection;
         }
 
         internal override IEnumerable<StepSyntax> GetParameters(StepWriter writer)
@@ -51,18 +49,17 @@ namespace IxMilia.Step.Items
 
             yield return writer.GetItemSyntax(Location);
             yield return writer.GetItemSyntax(Axis);
-            yield return writer.GetItemSyntax(RefDirection);
         }
 
-        internal static StepAxis2Placement3D CreateFromSyntaxList(StepBinder binder, StepSyntaxList syntaxList)
+        internal static StepRepresentationItem CreateFromSyntaxList(StepBinder binder, StepSyntaxList syntaxList)
         {
-            var axis = new StepAxis2Placement3D();
-            syntaxList.AssertListCount(4);
+            var axis = new StepAxis1Placement();
+            syntaxList.AssertListCount(3);
             axis.Name = syntaxList.Values[0].GetStringValue();
             binder.BindValue(syntaxList.Values[1], v => axis.Location = v.AsType<StepCartesianPoint>());
             binder.BindValue(syntaxList.Values[2], v => axis.Axis = v.AsType<StepDirection>());
-            binder.BindValue(syntaxList.Values[3], v => axis.RefDirection = v.AsType<StepDirection>());
             return axis;
         }
+
     }
 }

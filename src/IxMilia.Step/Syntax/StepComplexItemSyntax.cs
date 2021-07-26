@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using IxMilia.Step.Items;
 using IxMilia.Step.Tokens;
 
 namespace IxMilia.Step.Syntax

@@ -70,6 +70,19 @@ namespace IxMilia.Step.Items
                     case StepItemTypeExtensions.VertexPointText:
                         item = StepVertexPoint.CreateFromSyntaxList(binder, simpleItem.Parameters);
                         break;
+                    // New items R1C4RDO13
+                    case StepItemTypeExtensions.ToroidalSurfaceText:
+                        item = StepToroidalSurface.CreateFromSyntaxList(binder, simpleItem.Parameters);
+                        break;
+                    case StepItemTypeExtensions.ClosedShellText:
+                        item = StepClosedShell.CreateFromSyntaxList(binder, simpleItem.Parameters);
+                        break;
+                    case StepItemTypeExtensions.Axis1PlacementText:
+                        item = StepAxis1Placement.CreateFromSyntaxList(binder, simpleItem.Parameters);
+                        break;
+                    case StepItemTypeExtensions.SurfaceOfRevolutionText:
+                        item = StepSurfaceOfRevolutation.CreateFromSyntaxList(binder, simpleItem.Parameters);
+                        break;
                     default:
                         if (UnsupportedItemTypes.Add(simpleItem.Keyword))
                         {
@@ -80,7 +93,9 @@ namespace IxMilia.Step.Items
             }
             else
             {
-                // TODO:
+                // TODO: ??????
+                var complexItem = (StepComplexItemSyntax)itemSyntax;
+                item = new StepComplexItem(complexItem.Items);
             }
 
             return item;
